@@ -16,14 +16,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         Button btnStart = (Button)findViewById(R.id.btnStart);
         btnStart.setOnClickListener(this);
-
     }
 
     @Override
     public void onClick(View view) {
-        Toast.makeText(getApplicationContext(), "abc", Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), "Game Start!", Toast.LENGTH_LONG).show();
         Intent i = new Intent(getApplicationContext(), Main2Activity.class);
         startActivity(i);
-
     }
 }
