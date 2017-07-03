@@ -2,20 +2,25 @@ package com.example.hiroki.dynamicvisualacuitytest;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Main2Activity extends AppCompatActivity implements View.OnClickListener{
 
@@ -26,6 +31,12 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
     private Map<Button, DynamicVisualAcuityDto> dtoMap = new HashMap<>();
 
     private int lastPushedNumber = 0;
+
+    private TextView $timerText;
+
+    private Timer timer;
+
+    private int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +59,12 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
 
         dtoMap = this.createDtoMap($buttons, MAX_NUMBER);
         this.setButtonTextAndEvent(dtoMap);
+        $timerText = (TextView) findViewById(R.id.timerText);
+        this.initTimerText();
+    }
+
+    private void initTimerText() {
+        $timerText.setText("00:00.0");
     }
 
     private List<Button> makeButtonsList(List<Button> $buttons) {
@@ -111,6 +128,10 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
             dto.isPushed = true;
             lastPushedNumber++;
 
+            if(dto.no == 1) {
+                this.startGame();
+            }
+
             // finished game
             if(dto.no == MAX_NUMBER) {
                 this.finishGame();
@@ -123,6 +144,39 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
     private void finishGame() {
         Toast.makeText(getApplicationContext(), "Game Clear!", Toast.LENGTH_LONG).show();
         Intent i = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(i);
+
+//        resetTimer();
+        stopTimer();
+//        startActivity(i);
+    }
+
+
+    private void startGame() {
+        this.resetTimer();
+
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                count++;
+                long mm = count * 100 / 1000 / 60;
+                long ss = count * 100 / 1000 % 60;
+                long ms = (count * 100 - ss * 1000 - mm * 1000 * 60) / 100;
+                $timerText.setText(String.format("%1$02d:%2$02d.%3$01d", mm, ss, ms));
+            }
+        },0 , 100);
+    }
+
+    private void resetTimer() {
+        if (null != timer) {
+            timer.cancel();
+            timer = null;
+            this.initTimerText();
+            count = 0;
+        }
+    }
+
+    private void stopTimer() {
+        timer.cancel();
     }
 }

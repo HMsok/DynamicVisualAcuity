@@ -189,4 +189,14 @@
             android:textSize="20dp"
             android:id="@+id/button44"/>
     </TableRow>
+
+    <TextView
+        android:id="@+id/timerText"
+        android:layout_height="60dp"
+        android:layout_width="match_parent"
+        android:textSize="40dp"
+        android:textAlignment="center"
+        android:layout_margin="60dp">
+
+    </TextView>
 </TableLayout>
